@@ -15,12 +15,6 @@ export default new Phaser.Class({
 
     this.add.image(200, 500, "underground");
 
-    // graphics = this.add.graphics();
-    // // Color of the background
-    // graphics.fillStyle(0x000000, 1);
-    // // Size of the background
-    // graphics.fillRect(0, 0, 800, 600);
-
     // Add text to the screen
     this.add.text(60, 180, "Press space to start.", {
       fill: "#000",
