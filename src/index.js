@@ -3,10 +3,13 @@ import Phaser from "phaser";
 import MainMenu from "./scenes/MainMenu.js";
 import Game from "./scenes/Game.js";
 
-var config = {
-  type: Phaser.AUTO,
-  width: 400,
-  height: 700,
+// Namespace
+let InfiniteScroller = InfiniteScroller || {};
+
+let config = {
+  type: Phaser.CANVAS,
+  width: window.innerWidth,
+  height: window.innerHeight,
   physics: {
     default: "arcade",
     arcade: {
@@ -14,7 +17,8 @@ var config = {
       gravity: { y: 0, x: 0 },
     },
   },
+
   scene: [MainMenu, Game],
 };
 
-var game = new Phaser.Game(config);
+InfiniteScroller.game = new Phaser.Game(config);

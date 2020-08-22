@@ -1,5 +1,8 @@
 // import mp3 from "../assets/Orbital Colossus.mp3";
 import background from "../assets/deepBlueSea.jpg";
+import bigCloudsImg from "../assets/bigClouds.png";
+import smallCloudsImg from "../assets/smallClouds.png";
+
 import pipe from "../assets/pipe.png";
 import longPipe from "../assets/longPipe.png";
 import upsideDownPipe from "../assets/upsideDownPipe.png";
@@ -7,10 +10,14 @@ import star from "../assets/star.png";
 import dude from "../assets/dude.png";
 import { accelerate, decelerate } from "../utils";
 
-let player;
-let cursors;
-let pipes;
-let lives = 1;
+let backroundImage,
+  bigClouds,
+  smallClouds,
+  player,
+  cursors,
+  pipes,
+  lives = 1,
+  bottomOfThePage = window.innerHeight;
 
 export default new Phaser.Class({
   Extends: Phaser.Scene,
@@ -20,6 +27,9 @@ export default new Phaser.Class({
   },
   preload: function preload() {
     this.load.image("background", background);
+    this.load.image("bigClouds", bigCloudsImg);
+    this.load.image("smallClouds", smallCloudsImg);
+
     this.load.image("pipe", pipe);
     this.load.image("longPipe", longPipe);
     this.load.image("upsideDownPipe", upsideDownPipe);
@@ -32,7 +42,12 @@ export default new Phaser.Class({
     this.load.image("star", star);
   },
   create: function create() {
-    this.add.image(500, 500, "background");
+    backroundImage = this.add.image(500, 500, "background");
+    backroundImage.flipY = true;
+
+    bigClouds = this.add.tileSprite(640, 200, 1280, 400, "bigClouds");
+    smallClouds = this.add.tileSprite(640, 200, 1280, 400, "smallClouds");
+
     cursors = this.input.keyboard.createCursorKeys();
     // Box // Player
     player = this.physics.add.sprite(50, 350, "dude", 6);
@@ -67,8 +82,10 @@ export default new Phaser.Class({
 
     // Pipes
     pipes = this.physics.add.staticGroup();
-
-    pipes.create(200, 610, "longPipe").setSize(50, 245).setOffset(90, 0);
+    pipes
+      .create(200, bottomOfThePage - 50, "longPipe")
+      .setSize(50, 245)
+      .setOffset(90, 0);
     pipes.create(200, 60, "upsideDownPipe").setSize(50, 182);
 
     const processPipeCollision = (player, pipe) => {
@@ -79,7 +96,6 @@ export default new Phaser.Class({
         lives = 1;
         this.scene.start("mainmenu");
       }
-      // const lives = lives.countActive();
     };
 
     this.physics.add.collider(pipes, player, processPipeCollision, null, this);
@@ -171,9 +187,7 @@ export default new Phaser.Class({
       player.setVelocity(x, y);
     }
 
-    // if (cursors.up.isDown) player.setVelocityY(accelerate(velocity.y, -1));
-    // if (cursors.right.isDown) player.anims.play("right", true);
-    // if (cursors.down.isDown) player.setVelocityY(accelerate(velocity.y, 1));
-    // if (cursors.left.isDown) player.setVelocityX(accelerate(velocity.x, -1));
+    bigClouds.tilePositionX += 0.5;
+    smallClouds.tilePositionX += 0.25;
   },
 });
