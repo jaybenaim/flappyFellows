@@ -54,6 +54,7 @@ export default new Phaser.Class({
     // set collision box size
     player.body.setSize(30, 26).setOffset(0, 10);
 
+    player.body.gravity.y = 1000;
     this.anims.create({
       key: "left",
       frames: this.anims.generateFrameNumbers("dude", {
@@ -127,7 +128,7 @@ export default new Phaser.Class({
     this.physics.add.collider(stars, player, processCollision, null, this);
     this.physics.add.collider(stars, pipes);
 
-    player.setBounce(1, 1);
+    player.setBounce(0.7, 0.7);
     player.setCollideWorldBounds(true);
   },
   update: function () {
@@ -137,57 +138,52 @@ export default new Phaser.Class({
     // TOUCH EVENTS
     if (pointer.isDown) {
       if (pointer.x <= 225 || cursors.left.isDown) {
-        player.setVelocityX(accelerate(velocity.x, -1));
+        player.setVelocityX(accelerate(velocity.x, -2));
         player.anims.play("left", true);
       } else if (pointer.x > 225 || cursors.right.isDown) {
-        player.setVelocityX(accelerate(velocity.x, 1));
+        player.setVelocityX(accelerate(velocity.x, 2));
         player.anims.play("right", true);
-      } else {
-        player.setVelocityX(0);
-        player.anims.play("turn", true);
       }
-      if (pointer.y <= 350 || cursors.up.isDown) {
-        player.setVelocityY(accelerate(velocity.y, -1));
+      if (cursors.up.isDown) {
+        this.jump();
         player.anims.play("right", true);
-      } else if (pointer.y > 350 || cursors.down.isDown) {
-        player.setVelocityY(accelerate(velocity.y, 1));
-        player.anims.play("right", true);
-      } else {
-        player.setVelocityX(0);
-        player.anims.play("turn", true);
       }
+      player.anims.play("turn", true);
+    }
+    if (player.y < 0 || player.y >= window.innerHeight) {
+      this.restartGame();
     }
     // ARROW KEYS
     else {
       // ARROW KEYS
       // Move left
       if (cursors.left.isDown) {
-        player.setVelocityX(accelerate(velocity.x, -1));
+        player.setVelocityX(accelerate(velocity.x, -2));
         player.anims.play("left", true);
 
         // move right
       } else if (cursors.right.isDown) {
-        player.setVelocityX(accelerate(velocity.x, 1));
+        player.setVelocityX(accelerate(velocity.x, 2));
         player.anims.play("right", true);
       } else if (cursors.up.isDown) {
-        player.setVelocityY(accelerate(velocity.y, -1));
-        player.anims.play("right", true);
-      } else if (cursors.down.isDown) {
-        player.setVelocityY(accelerate(velocity.y, 1));
+        this.jump();
         player.anims.play("right", true);
       } else {
-        player.setVelocityX(0);
         player.anims.play("turn", true);
       }
     }
 
     if (cursors.space.isDown) {
-      const x = decelerate(velocity.x);
-      const y = decelerate(velocity.y);
-      player.setVelocity(x, y);
+      this.jump();
     }
 
     bigClouds.tilePositionX += 0.5;
     smallClouds.tilePositionX += 0.25;
+  },
+  jump: function () {
+    player.body.velocity.y = -350;
+  },
+  restartGame: function () {
+    this.scene.start("mainmenu");
   },
 });
