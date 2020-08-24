@@ -8,7 +8,7 @@ import longPipe from "../assets/longPipe.png";
 import upsideDownPipe from "../assets/upsideDownPipe.png";
 import star from "../assets/star.png";
 import dude from "../assets/dude.png";
-import { accelerate, decelerate } from "../utils";
+import { accelerate, decelerate, randomIntFromInterval } from "../utils";
 
 let backroundImage,
   bigClouds,
@@ -41,20 +41,37 @@ export default new Phaser.Class({
 
     this.load.image("star", star);
   },
-  create: function create() {
+  create: function () {
     backroundImage = this.add.image(500, 500, "background");
     backroundImage.flipY = true;
-
     bigClouds = this.add.tileSprite(640, 200, 1280, 400, "bigClouds");
     smallClouds = this.add.tileSprite(640, 200, 1280, 400, "smallClouds");
 
     cursors = this.input.keyboard.createCursorKeys();
-    // Box // Player
     player = this.physics.add.sprite(50, 350, "dude", 6);
+    pipes = this.add.group();
+
+    this.addPlayer();
+    // this.addStars();
+
+    this.renderPipes();
+    const processPipeCollision = (player, pipe) => {
+      // lives check
+      lives -= 1;
+
+      if (lives === 0) {
+        lives = 1;
+        this.scene.start("mainmenu");
+      }
+    };
+    this.physics.add.collider(pipes, player, processPipeCollision, null, this);
+  },
+  addPlayer: function () {
+    //  PLAYER
     // set collision box size
     player.body.setSize(30, 26).setOffset(0, 10);
-
     player.body.gravity.y = 1000;
+    // PLAYER ANIMATIONS
     this.anims.create({
       key: "left",
       frames: this.anims.generateFrameNumbers("dude", {
@@ -64,13 +81,11 @@ export default new Phaser.Class({
       frameRate: 10,
       repeat: -1,
     });
-
     this.anims.create({
       key: "turn",
       frames: [{ key: "dude", frame: 4 }],
       frameRate: 20,
     });
-
     this.anims.create({
       key: "right",
       frames: this.anims.generateFrameNumbers("dude", {
@@ -81,33 +96,19 @@ export default new Phaser.Class({
       repeat: -1,
     });
 
-    // Pipes
-    pipes = this.physics.add.staticGroup();
-    pipes
-      .create(200, bottomOfThePage - 50, "longPipe")
-      .setSize(50, 245)
-      .setOffset(90, 0);
-    pipes.create(200, 60, "upsideDownPipe").setSize(50, 182);
-
-    const processPipeCollision = (player, pipe) => {
-      // lives check
-      lives -= 1;
-
-      if (lives === 0) {
-        lives = 1;
-        this.scene.start("mainmenu");
-      }
-    };
-
-    this.physics.add.collider(pipes, player, processPipeCollision, null, this);
-
+    // Player collisions
+    player.setBounce(0.7, 0.7);
+    player.setCollideWorldBounds(true);
+  },
+  addStars: function () {
+    // STARS;
     const stars = this.physics.add.group({
       key: "star",
       repeat: 11,
       setScale: { x: 0.2, y: 0.2 },
       setXY: { x: 400, y: 300 },
     });
-
+    // Create stars
     stars.children.iterate(function (child) {
       child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
       child.setVelocityX(150 - Math.random() * 300);
@@ -116,21 +117,67 @@ export default new Phaser.Class({
       child.setCollideWorldBounds(true);
       child.setSize(220, 200).setOffset(160, 80);
     });
-
-    const processCollision = (player, star) => {
+    // COLLISIONS
+    // Star collision
+    const processStarCollision = (player, star) => {
       star.destroy();
       const starsLeft = stars.countActive();
       if (starsLeft === 0) {
         this.scene.start("mainmenu");
       }
     };
-
-    this.physics.add.collider(stars, player, processCollision, null, this);
     this.physics.add.collider(stars, pipes);
 
-    player.setBounce(0.7, 0.7);
-    player.setCollideWorldBounds(true);
+    this.physics.add.collider(stars, player, processStarCollision, null, this);
   },
+  renderPipes: function () {
+    this.time.addEvent({
+      delay: 3500,
+      callback: this.addPipes,
+      callbackScope: this,
+      loop: true,
+    });
+  },
+  stopPipetimer: function () {
+    this.timer.remove();
+  },
+  addPipes: function () {
+    let maxBottom = bottomOfThePage - 50;
+
+    this.addPipe(
+      window.innerWidth,
+      randomIntFromInterval(maxBottom - 75, maxBottom),
+      "longPipe"
+    );
+    this.addPipe(
+      window.innerWidth,
+      randomIntFromInterval(0, 75),
+      "upsideDownPipe"
+    );
+  },
+
+  addPipe: function (x, y, typeOfPipe) {
+    let pipe = this.physics.add.sprite(x, y, typeOfPipe);
+    pipes.add(pipe);
+    pipe.setScale(1.3);
+
+    // Make pipe move left
+    pipe.body.velocity.x = -200;
+
+    // set collision box for pipes
+    if (typeOfPipe === "longPipe") {
+      pipe.setSize(63, 200);
+      pipe.setOffset(85, 0);
+    } else {
+      // set upsidedown pipe
+      pipe.setSize(72, 197);
+      pipe.setOffset(90, 20);
+    }
+
+    // Kill the pipe when it is out of view
+    pipe.setCollideWorldBounds(false);
+  },
+
   update: function () {
     const { velocity } = player.body;
 

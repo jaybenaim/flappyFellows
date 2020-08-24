@@ -19,3 +19,8 @@ export function accelerate(oldValue, direction) {
   const limitFunc = direction < 0 ? Math.min : Math.min;
   return limitFunc(newValue, MAX_SPEED);
 }
+
+export function randomIntFromInterval(min, max) {
+  // min and max included
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
