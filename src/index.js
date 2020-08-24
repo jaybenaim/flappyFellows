@@ -7,7 +7,7 @@ import Game from "./scenes/Game.js";
 let InfiniteScroller = InfiniteScroller || {};
 
 let config = {
-  type: Phaser.CANVAS,
+  type: Phaser.AUTO,
   width: window.innerWidth,
   height: window.innerHeight,
   physics: {
