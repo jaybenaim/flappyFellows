@@ -191,11 +191,8 @@ export default new Phaser.Class({
         player.setVelocityX(accelerate(velocity.x, 2));
         player.anims.play("right", true);
       }
-      if (cursors.up.isDown) {
-        this.jump();
-        player.anims.play("right", true);
-      }
-      player.anims.play("turn", true);
+      this.jump();
+      player.anims.play("right", true);
     }
     if (player.y < 0 || player.y >= window.innerHeight) {
       this.restartGame();
