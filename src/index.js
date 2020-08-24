@@ -10,6 +10,13 @@ let config = {
   type: Phaser.CANVAS,
   width: window.innerWidth,
   height: window.innerHeight,
+  scale: {
+    parent: "phaser-game",
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: DEFAULT_WIDTH,
+    height: DEFAULT_HEIGHT,
+  },
   physics: {
     default: "arcade",
     arcade: {
