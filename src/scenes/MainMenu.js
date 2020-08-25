@@ -1,6 +1,8 @@
 import underground from "../assets/underground.jpg";
-let graphics;
-let cursors;
+let graphics,
+  cursors,
+  windowWidth = window.innerWidth,
+  widnowHeight = window.innerHeight;
 
 export default new Phaser.Class({
   Extends: Phaser.Scene,
@@ -13,21 +15,26 @@ export default new Phaser.Class({
   create: function () {
     cursors = this.input.keyboard.createCursorKeys();
 
-    this.add.image(200, 500, "underground");
-
+    let backgroundImg = this.add.image(
+      windowWidth / 2,
+      widnowHeight / 2,
+      "underground"
+    );
+    backgroundImg.setDisplaySize(windowWidth, widnowHeight);
     // Add text to the screen
-    this.add.text(60, 180, "Press space to start.", {
-      fill: "#000",
-    });
-    this.add.text(60, 195, "Move with up, down, left, right.", {
-      fill: "#000",
-    });
-    this.add.text(60, 210, "Press spacebar to brake.", {
-      fill: "#000",
-    });
-    this.add.text(60, 225, "Collect all the stars to win.", {
-      fill: "#000",
-    });
+    let textStyle = {
+      fill: "#fff",
+      fontSize: "1.8em",
+    };
+    this.add.text(40, 120, "Press space to start.", textStyle);
+    this.add.text(40, 170, "Move with up, down, left, right.", textStyle);
+    this.add.text(40, 220, "Press spacebar to jump.", textStyle);
+    this.add.text(
+      40,
+      270,
+      "Collect all the stars to move on to the next level.",
+      textStyle
+    );
   },
   update: function () {
     // Start game on space bar down

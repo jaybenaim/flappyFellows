@@ -24,7 +24,7 @@ let backroundImage,
 export default new Phaser.Class({
   Extends: Phaser.Scene,
   initialize: function () {
-    Phaser.Scene.call(this, { key: "game" });
+    Phaser.Scene.call(this, { key: "level5" });
     window.GAME = this;
   },
   preload: function preload() {
@@ -131,16 +131,16 @@ export default new Phaser.Class({
       child.setSize(220, 200).setOffset(160, 80);
     });
     // COLLISIONS
-
     // Star collision
     const processStarCollision = (player, star) => {
       star.destroy();
       this.updateScore(5);
       const starsLeft = stars.countActive();
       if (starsLeft === 0) {
-        this.scene.start("level5");
+        this.scene.start("mainmenu");
       }
     };
+    this.physics.add.collider(stars, pipes);
 
     this.physics.add.collider(stars, player, processStarCollision, null, this);
   },

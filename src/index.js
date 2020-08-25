@@ -2,6 +2,7 @@ import Phaser from "phaser";
 
 import MainMenu from "./scenes/MainMenu.js";
 import Game from "./scenes/Game.js";
+import Level5 from "./scenes/Level5.js";
 
 // Namespace
 let InfiniteScroller = InfiniteScroller || {};
@@ -18,7 +19,7 @@ let config = {
     },
   },
 
-  scene: [MainMenu, Game],
+  scene: [MainMenu, Game, Level5],
 };
 
 InfiniteScroller.game = new Phaser.Game(config);
