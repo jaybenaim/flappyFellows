@@ -7,7 +7,7 @@ import pipe from "../assets/pipe.png";
 import longPipe from "../assets/longPipe.png";
 import upsideDownPipe from "../assets/upsideDownPipe.png";
 import star from "../assets/star.png";
-import dude from "../assets/dude.png";
+import dude from "../assets/flappySprite.png";
 import { accelerate, decelerate, randomIntFromInterval } from "../utils";
 
 let backroundImage,
@@ -36,9 +36,9 @@ export default new Phaser.Class({
     this.load.image("longPipe", longPipe);
     this.load.image("upsideDownPipe", upsideDownPipe);
 
-    this.load.spritesheet("dude", dude, {
-      frameWidth: 32,
-      frameHeight: 35, //  48 for full height
+    this.load.image("dude", dude, {
+      frameWidth: 100,
+      frameHeight: 100, //  48 for full height
     });
 
     this.load.image("star", star);
@@ -50,7 +50,7 @@ export default new Phaser.Class({
     smallClouds = this.add.tileSprite(640, 200, 1280, 400, "smallClouds");
 
     cursors = this.input.keyboard.createCursorKeys();
-    player = this.physics.add.sprite(50, 350, "dude", 6);
+    player = this.physics.add.sprite(50, 350, "dude");
     pipes = this.add.group();
 
     // SCORE
@@ -82,32 +82,32 @@ export default new Phaser.Class({
   addPlayer: function () {
     //  PLAYER
     // set collision box size
-    player.body.setSize(30, 26).setOffset(0, 10);
+    player.body.setSize(80, 80).setOffset(10, 10);
     player.body.gravity.y = 1000;
     // PLAYER ANIMATIONS
-    this.anims.create({
-      key: "left",
-      frames: this.anims.generateFrameNumbers("dude", {
-        start: 0,
-        end: 3,
-      }),
-      frameRate: 10,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: "turn",
-      frames: [{ key: "dude", frame: 4 }],
-      frameRate: 20,
-    });
-    this.anims.create({
-      key: "right",
-      frames: this.anims.generateFrameNumbers("dude", {
-        start: 5,
-        end: 8,
-      }),
-      frameRate: 10,
-      repeat: -1,
-    });
+    // this.anims.create({
+    //   key: "left",
+    //   frames: this.anims.generateFrameNumbers("dude", {
+    //     start: 0,
+    //     end: 3,
+    //   }),
+    //   frameRate: 10,
+    //   repeat: -1,
+    // });
+    // this.anims.create({
+    //   key: "turn",
+    //   frames: [{ key: "dude", frame: 4 }],
+    //   frameRate: 20,
+    // });
+    // this.anims.create({
+    //   key: "right",
+    //   frames: this.anims.generateFrameNumbers("dude", {
+    //     start: 5,
+    //     end: 8,
+    //   }),
+    //   frameRate: 10,
+    //   repeat: -1,
+    // });
 
     // Player collisions
     player.setBounce(0.7, 0.7);
@@ -202,13 +202,10 @@ export default new Phaser.Class({
     if (pointer.isDown) {
       if (pointer.x <= 225 || cursors.left.isDown) {
         player.setVelocityX(accelerate(velocity.x, -2));
-        player.anims.play("left", true);
       } else if (pointer.x > 225 || cursors.right.isDown) {
         player.setVelocityX(accelerate(velocity.x, 2));
-        player.anims.play("right", true);
       }
       this.jump();
-      player.anims.play("right", true);
     }
     if (player.y < 0 || player.y >= window.innerHeight) {
       this.restartGame();
@@ -219,17 +216,13 @@ export default new Phaser.Class({
       // Move left
       if (cursors.left.isDown) {
         player.setVelocityX(accelerate(velocity.x, -2));
-        player.anims.play("left", true);
 
         // move right
       } else if (cursors.right.isDown) {
         player.setVelocityX(accelerate(velocity.x, 2));
-        player.anims.play("right", true);
       } else if (cursors.up.isDown) {
         this.jump();
-        player.anims.play("right", true);
       } else {
-        player.anims.play("turn", true);
       }
     }
 
