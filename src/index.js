@@ -14,8 +14,12 @@ let config = {
   physics: {
     default: "arcade",
     arcade: {
-      // debug: true,
+      debug: true,
       // gravity: { y: 0, x: 0 },
+    },
+    scale: {
+      mode: Phaser.Scale.FIT,
+      autoCenter: Phaser.Scale.CENTER_BOTH,
     },
   },
 

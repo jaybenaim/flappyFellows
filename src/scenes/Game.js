@@ -83,6 +83,7 @@ export default new Phaser.Class({
     //  PLAYER
     // set collision box size
     player.body.setSize(80, 80).setOffset(10, 10);
+    player.setScale(0.5);
     player.body.gravity.y = 1000;
     // PLAYER ANIMATIONS
     // this.anims.create({

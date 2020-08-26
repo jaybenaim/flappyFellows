@@ -22,19 +22,15 @@ export default new Phaser.Class({
     );
     backgroundImg.setDisplaySize(windowWidth, widnowHeight);
     // Add text to the screen
-    let textStyle = {
+    const textStyle = {
       fill: "#fff",
-      fontSize: "1.8em",
+      fontSize: "1.7em",
     };
     this.add.text(40, 120, "Press space to start.", textStyle);
     this.add.text(40, 170, "Move with up, down, left, right.", textStyle);
     this.add.text(40, 220, "Press spacebar to jump.", textStyle);
-    this.add.text(
-      40,
-      270,
-      "Collect all the stars to move on to the next level.",
-      textStyle
-    );
+
+    this.add.text(40, 270, "Collect all the stars.", textStyle);
   },
   update: function () {
     // Start game on space bar down
