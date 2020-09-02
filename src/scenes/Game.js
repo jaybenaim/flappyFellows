@@ -235,7 +235,7 @@ export default new Phaser.Class({
     smallClouds.tilePositionX += 0.25;
   },
   jump: function () {
-    player.body.velocity.y = -350;
+    player.body.velocity.y = -300;
   },
   restartGame: function () {
     this.scene.start("mainmenu");
