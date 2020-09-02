@@ -6,7 +6,6 @@ import Level5 from "./scenes/Level5.js";
 
 // Namespace
 let InfiniteScroller = InfiniteScroller || {};
-
 let config = {
   type: Phaser.AUTO,
   width: window.innerWidth,
@@ -14,7 +13,7 @@ let config = {
   physics: {
     default: "arcade",
     arcade: {
-      // debug: true,
+      debug: true,
       // gravity: { y: 0, x: 0 },
     },
     scale: {
